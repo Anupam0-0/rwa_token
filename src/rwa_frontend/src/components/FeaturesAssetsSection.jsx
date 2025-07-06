@@ -59,7 +59,7 @@ const FeaturesAssetsSection = () => {
               </div>
             </div>
 
-            <button className="font-medium text-neutral-50 bg-sky-500 hover:bg-sky-600 py-2 rounded-lg">
+            <button className="font-medium text-neutral-50 bg-sky-500 hover:bg-sky-600 py-2 rounded-lg cursor-pointer">
                 View Details
             </button>
           </div>

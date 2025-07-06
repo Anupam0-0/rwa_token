@@ -22,9 +22,9 @@ const Navbar = () => {
     <div className="w-full h-20 ">
       <div className="max-w-[100rem] mx-auto  flex justify-between items-center px-8 py-2">
         <div>
-          <h1 className="text-4xl text-sky-500 font-semibold">RWAKEN</h1>
+          <h1 className="text-4xl text-sky-500 font-semibold cursor-pointer">RWAKEN</h1>
         </div>
-        <div className="py-2 px-12 rounded-4xl flex  gap-16 text-xl">
+        <div className="py-2 px-12 rounded-4xl flex  gap-16 text-lg">
           {
             NavbarLinks.map((item, i) => (
                 <a key={i} href={item.href} className="hover:text-sky-600 cursor-pointer transition-all ease-in-out duration-300" >
@@ -34,7 +34,7 @@ const Navbar = () => {
           }
         </div>
         <div>
-          <button className="bg-orange-500 text-neutral-100 px-4 py-2 rounded-xl font-medium">
+          <button className="bg-orange-500 text-neutral-100 px-4 py-2 rounded-xl font-medium cursor-pointer">
             Connect Wallet
           </button>
         </div>
