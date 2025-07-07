@@ -1,31 +1,22 @@
-import { useState } from 'react';
-import { rwa_backend } from 'declarations/rwa_backend';
+import React from 'react'
+import Navbar from './components/Navbar'
+import HeroSection from './components/HeroSection'
+import StatsSection from './components/StatsSection'
+import FeaturesAssetsSection from './components/FeaturesAssetsSection'
+import Footer from './components/Footer'
+import CallToActionSection from './components/CallToActionSection'
 
-function App() {
-  const [greeting, setGreeting] = useState('');
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    rwa_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
-
+const App = () => {
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
-  );
+    <div>
+        <Navbar/>
+        <HeroSection/>
+        <StatsSection/>
+        <FeaturesAssetsSection/>
+        <CallToActionSection />
+        <Footer/>
+    </div>
+  )
 }
 
-export default App;
+export default App
