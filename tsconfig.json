@@ -5,7 +5,8 @@
         "experimentalDecorators": true,
         "strictPropertyInitialization": false,
         "moduleResolution": "node",
-        "allowJs": true,
-        "outDir": "HACK_BECAUSE_OF_ALLOW_JS"
+        "skipLibCheck": true,
+        "types": [],
+        "jsx": "react-jsx"
     }
 }

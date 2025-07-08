@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   TrendingUp, 
@@ -11,129 +11,37 @@ import {
   ArrowUpRight,
   ArrowDownRight
 } from 'lucide-react';
+import { useWalletConnect } from '../hooks/useWallet';
+import { getPortfolio, listTokensByUser, getAsset } from '../api/canister';
 
 const Portfolio = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState('1M');
+  const { principal, isConnected } = useWalletConnect();
+  const [portfolio, setPortfolio] = useState(null);
+  const [tokens, setTokens] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const portfolioSummary = {
-    totalValue: 125750,
-    totalInvested: 98500,
-    totalReturn: 27250,
-    returnPercentage: 27.7,
-    monthlyIncome: 1247,
-    totalAssets: 8
-  };
-
-  const holdings = [
-    {
-      id: 1,
-      name: 'Manhattan Luxury Apartment',
-      category: 'Real Estate',
-      tokensOwned: 15000,
-      currentValue: 15750,
-      invested: 15000,
-      return: 750,
-      returnPercentage: 5.0,
-      monthlyIncome: 126,
-      apy: 8.5,
-      status: 'active'
-    },
-    {
-      id: 2,
-      name: 'Vintage Wine Collection',
-      category: 'Collectibles',
-      tokensOwned: 8500,
-      currentValue: 9520,
-      invested: 8500,
-      return: 1020,
-      returnPercentage: 12.0,
-      monthlyIncome: 98,
-      apy: 12.3,
-      status: 'active'
-    },
-    {
-      id: 3,
-      name: 'Gold Mining Rights',
-      category: 'Commodities',
-      tokensOwned: 25000,
-      currentValue: 28750,
-      invested: 25000,
-      return: 3750,
-      returnPercentage: 15.0,
-      monthlyIncome: 328,
-      apy: 15.7,
-      status: 'active'
-    },
-    {
-      id: 4,
-      name: 'Modern Art Collection',
-      category: 'Art',
-      tokensOwned: 12000,
-      currentValue: 12960,
-      invested: 12000,
-      return: 960,
-      returnPercentage: 8.0,
-      monthlyIncome: 102,
-      apy: 10.2,
-      status: 'active'
-    },
-    {
-      id: 5,
-      name: 'Commercial Office Building',
-      category: 'Real Estate',
-      tokensOwned: 30000,
-      currentValue: 32400,
-      invested: 30000,
-      return: 2400,
-      returnPercentage: 8.0,
-      monthlyIncome: 294,
-      apy: 9.8,
-      status: 'active'
-    }
-  ];
-
-  const transactions = [
-    {
-      id: 1,
-      type: 'buy',
-      asset: 'Manhattan Luxury Apartment',
-      amount: 5000,
-      tokens: 5000,
-      price: 1.00,
-      date: '2024-01-15',
-      status: 'completed'
-    },
-    {
-      id: 2,
-      type: 'dividend',
-      asset: 'Gold Mining Rights',
-      amount: 328,
-      tokens: 0,
-      price: 0,
-      date: '2024-01-01',
-      status: 'completed'
-    },
-    {
-      id: 3,
-      type: 'buy',
-      asset: 'Vintage Wine Collection',
-      amount: 3500,
-      tokens: 3500,
-      price: 1.00,
-      date: '2023-12-20',
-      status: 'completed'
-    },
-    {
-      id: 4,
-      type: 'sell',
-      asset: 'Modern Art Collection',
-      amount: 2000,
-      tokens: 2000,
-      price: 1.08,
-      date: '2023-12-10',
-      status: 'completed'
-    }
-  ];
+  useEffect(() => {
+    if (!principal) return;
+    setLoading(true);
+    setError('');
+    Promise.all([
+      getPortfolio(principal),
+      listTokensByUser(principal)
+    ])
+      .then(async ([p, t]) => {
+        setPortfolio(p);
+        setTokens(t);
+        // Fetch asset details for each token
+        const assetIds = Array.from(new Set(t.map(token => token.asset_id)));
+        const assetDetails = await Promise.all(assetIds.map(getAsset));
+        setAssets(assetDetails);
+      })
+      .catch(() => setError('Failed to load portfolio'))
+      .finally(() => setLoading(false));
+  }, [principal]);
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -152,6 +60,40 @@ const Portfolio = () => {
     });
   };
 
+  if (loading) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-red-600">{error}</div>;
+  }
+
+  if (!portfolio) {
+    return <div className="min-h-screen bg-gray-50 flex items-center justify-center">No portfolio data available.</div>;
+  }
+
+  const holdings = assets.map(asset => {
+    const token = tokens.find(t => t.asset_id === asset.id);
+    if (!token) return null;
+
+    const holding = {
+      id: asset.id,
+      name: asset.name,
+      category: asset.category,
+      tokensOwned: token.amount,
+      currentValue: token.current_value,
+      invested: token.invested_amount,
+      return: token.current_value - token.invested_amount,
+      returnPercentage: ((token.current_value - token.invested_amount) / token.invested_amount) * 100,
+      monthlyIncome: token.monthly_income,
+      apy: token.apy,
+      status: 'active'
+    };
+    return holding;
+  }).filter(holding => holding !== null);
+
+  const transactions = []; // No mock transactions for now
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -161,7 +103,7 @@ const Portfolio = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Total Portfolio Value</p>
-                <p className="text-2xl font-bold">{formatCurrency(portfolioSummary.totalValue)}</p>
+                <p className="text-2xl font-bold">{formatCurrency(portfolio.total_value)}</p>
               </div>
               <DollarSign className="h-8 w-8 text-blue-600" />
             </div>
@@ -172,9 +114,9 @@ const Portfolio = () => {
               <div>
                 <p className="text-sm text-gray-600">Total Return</p>
                 <p className="text-2xl font-bold text-green-600">
-                  +{formatCurrency(portfolioSummary.totalReturn)}
+                  +{formatCurrency(portfolio.total_return)}
                 </p>
-                <p className="text-sm text-green-600">+{portfolioSummary.returnPercentage}%</p>
+                <p className="text-sm text-green-600">+{portfolio.return_percentage}%</p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-600" />
             </div>
@@ -184,7 +126,7 @@ const Portfolio = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Monthly Income</p>
-                <p className="text-2xl font-bold">{formatCurrency(portfolioSummary.monthlyIncome)}</p>
+                <p className="text-2xl font-bold">{formatCurrency(portfolio.monthly_income)}</p>
               </div>
               <Calendar className="h-8 w-8 text-purple-600" />
             </div>
@@ -194,7 +136,7 @@ const Portfolio = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Active Assets</p>
-                <p className="text-2xl font-bold">{portfolioSummary.totalAssets}</p>
+                <p className="text-2xl font-bold">{portfolio.total_assets}</p>
               </div>
               <PieChart className="h-8 w-8 text-orange-600" />
             </div>

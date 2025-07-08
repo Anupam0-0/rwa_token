@@ -1,5 +1,6 @@
 import React from "react";
 import YC from "../assets/YC.jpg";
+import { Link } from 'react-router-dom';
 
 const CardDetails = [
   {
@@ -35,11 +36,11 @@ const FeaturesAssetsSection = () => {
             key={i}
             className="p-4 col-span-1 flex flex-col rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
           >
-            <img
+            {/* <img
               src={YC}
               alt="thumbnail"
               className="h-72 object-cover rounded-lg"
-            />
+            /> */}
             <div className="py-4 flex flex-col gap-2">
               <h2 className="text-2xl font-medium">{card.title}</h2>
               <p className="text-base font-medium text-neutral-500">{card.Category}</p>
@@ -59,9 +60,9 @@ const FeaturesAssetsSection = () => {
               </div>
             </div>
 
-            <button className="font-medium text-neutral-50 bg-sky-500 hover:bg-sky-600 py-2 rounded-lg cursor-pointer">
+            <Link to={`/asset/${i+1}`} className="font-medium text-neutral-50 bg-sky-500 hover:bg-sky-600 py-2 rounded-lg cursor-pointer text-center block">
                 View Details
-            </button>
+            </Link>
           </div>
         ))}
       </div>

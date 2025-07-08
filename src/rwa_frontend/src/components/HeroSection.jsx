@@ -1,5 +1,6 @@
 import React from "react";
 import {ArrowRight} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
@@ -12,8 +13,8 @@ const HeroSection = () => {
           global markets with unpreceeded estate.
         </p>
         <div className="flex gap-6 justify-center text-xl">
-            <button className="bg-sky-500 hover:bg-sky-600 text-neutral-100 rounded-lg shadow-xl py-2 px-10 flex justify-center items-center cursor-pointer font-medium">Explore Assets <span className="ml-4" ><ArrowRight size={20} /></span> </button>
-            <button className="text-neutral-600 bg-white rounded-lg shadow-xl py-4 px-8 flex justify-center items-center cursor-pointer font-medium">Tokenize your Asset</button>
+            <Link to="/marketplace" className="bg-sky-500 hover:bg-sky-600 text-neutral-100 rounded-lg shadow-xl py-2 px-10 flex justify-center items-center cursor-pointer font-medium">Explore Assets <span className="ml-4" ><ArrowRight size={20} /></span> </Link>
+            <Link to="/tokenize" className="text-neutral-600 bg-white rounded-lg shadow-xl py-4 px-8 flex justify-center items-center cursor-pointer font-medium">Tokenize your Asset</Link>
         </div>
       </div>
     </div>

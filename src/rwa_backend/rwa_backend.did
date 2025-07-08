@@ -1,3 +1,135 @@
+// User Types
+ type User = record {
+   id: principal;
+   username: text;
+   email: text;
+   wallet_address: text;
+   kyc_status: KycStatus;
+   role: UserRole;
+   profile: opt UserProfile;
+   notifications: vec Notification;
+ };
+ type KycStatus = variant { Pending; Approved; Rejected };
+ type UserRole = variant { User; Admin };
+ type UserProfile = record { bio: opt text; avatar: opt text };
+
+// Asset Types
+ type Asset = record {
+   id: nat64;
+   owner_id: principal;
+   name: text;
+   description: text;
+   category: text;
+   location: text;
+   images: vec text;
+   documents: vec text;
+   total_value: nat64;
+   token_price: nat64;
+   total_tokens: nat64;
+   available_tokens: nat64;
+   apy: float64;
+   status: AssetStatus;
+   launch_date: opt text;
+   funding_deadline: opt text;
+   monthly_income: opt nat64;
+   risk_rating: opt text;
+   key_metrics: opt KeyMetrics;
+ };
+ type AssetStatus = variant { Pending; Approved; Rejected; Active; Funding; Sold };
+ type KeyMetrics = record {
+   cap_rate: opt float64;
+   occupancy_rate: opt float64;
+   location_score: opt float64;
+   liquidity_rating: opt text;
+ };
+
+// Token Types
+ type Token = record {
+   id: nat64;
+   asset_id: nat64;
+   owner_id: principal;
+   amount: nat64;
+   price: nat64;
+   status: TokenStatus;
+ };
+ type TokenStatus = variant { Available; Sold; Locked };
+
+// Trade Types
+ type Trade = record {
+   id: nat64;
+   buyer_id: principal;
+   seller_id: principal;
+   token_id: nat64;
+   asset_id: nat64;
+   quantity: nat64;
+   price: nat64;
+   currency: Currency;
+   status: TradeStatus;
+   created_at: text;
+   filled: nat64;
+ };
+ type TradeStatus = variant { Pending; Completed; Cancelled };
+ type Currency = variant { ICP; USD; INR };
+
+// Portfolio Types
+ type Portfolio = record {
+   user_id: principal;
+   tokens: vec nat64;
+   assets: vec nat64;
+ };
+
+// Notification Types
+ type Notification = record {
+   id: nat64;
+   user_id: principal;
+   notification_type: NotificationType;
+   message: text;
+   read: bool;
+   created_at: text;
+ };
+ type NotificationType = variant { Trade; Investment; Kyc; Admin; Other };
+
 service : {
-    "greet": (text) -> (text) query;
+  // User
+  register_user: (text, text, text) -> (opt User);
+  get_user: (principal) -> (opt User) query;
+  update_profile: (opt text, opt text) -> (opt User);
+  set_kyc_status: (principal, KycStatus) -> (opt User);
+  list_users: () -> (vec User) query;
+
+  // Asset
+  create_asset: (text, text, text, text, vec text, vec text, nat64, nat64, nat64, float64, opt text, opt text, opt nat64, opt text, opt KeyMetrics) -> (Asset);
+  get_asset: (nat64) -> (opt Asset) query;
+  update_asset: (nat64, opt text, opt text, opt text, opt text, opt vec text, opt vec text, opt nat64, opt nat64, opt nat64, opt float64, opt text, opt text, opt nat64, opt text, opt KeyMetrics) -> (opt Asset);
+  list_assets: () -> (vec Asset) query;
+  approve_asset: (nat64) -> (opt Asset);
+  delete_asset: (nat64) -> (bool);
+
+  // Token
+  mint_token: (nat64, principal, nat64, nat64) -> (Token);
+  get_token: (nat64) -> (opt Token) query;
+  transfer_token: (nat64, principal) -> (opt Token);
+  list_tokens: () -> (vec Token) query;
+  list_tokens_by_user: (principal) -> (vec Token) query;
+  list_tokens_by_asset: (nat64) -> (vec Token) query;
+
+  // Trade
+  create_trade: (principal, principal, nat64, nat64, nat64, nat64, Currency, text) -> (Trade);
+  get_trade: (nat64) -> (opt Trade) query;
+  list_trades: () -> (vec Trade) query;
+  list_trades_by_user: (principal) -> (vec Trade) query;
+  list_trades_by_asset: (nat64) -> (vec Trade) query;
+  update_trade_status: (nat64, TradeStatus, nat64) -> (opt Trade);
+
+  // Portfolio
+  create_portfolio: (principal) -> (Portfolio);
+  get_portfolio: (principal) -> (opt Portfolio) query;
+  update_portfolio: (principal, vec nat64, vec nat64) -> (opt Portfolio);
+  list_portfolios: () -> (vec Portfolio) query;
+
+  // Notification
+  create_notification: (principal, NotificationType, text, text) -> (Notification);
+  get_notification: (nat64) -> (opt Notification) query;
+  list_notifications_by_user: (principal) -> (vec Notification) query;
+  mark_notification_read: (nat64) -> (opt Notification);
 }

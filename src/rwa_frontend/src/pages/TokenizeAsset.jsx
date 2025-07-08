@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Upload, FileText, DollarSign, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { createAsset } from '../api/canister';
+import { useWalletConnect } from '../hooks/useWallet';
 
 const TokenizeAsset = () => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const TokenizeAsset = () => {
     documents: [],
     images: []
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const steps = [
     { id: 1, title: 'Asset Details', icon: FileText },
@@ -60,45 +64,55 @@ const TokenizeAsset = () => {
     }
   };
 
-  const handleSubmit = () => {
-    toast({
-      title: "Asset Submitted Successfully!",
-      description: "Your asset tokenization request has been submitted for review. You'll receive updates via email.",
-    });
-    
-    // Simulate navigation to a success page
-    setTimeout(() => {
-      navigate('/portfolio');
-    }, 2000);
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      // Map form fields to backend args
+      await createAsset({
+        name: formData.assetName,
+        description: formData.description,
+        category: formData.assetType,
+        location: formData.location,
+        images: formData.images.map(f => f.name), // or URLs if uploaded
+        documents: formData.documents.map(f => f.name), // or URLs if uploaded
+        total_value: Number(formData.totalValue),
+        token_price: Number(formData.tokenPrice),
+        total_tokens: Math.floor(Number(formData.totalValue) / Number(formData.tokenPrice)),
+        apy: Number(formData.expectedApy),
+        launch_date: formData.launchDate || null,
+        funding_deadline: formData.fundingDeadline || null,
+        monthly_income: null,
+        risk_rating: null,
+        key_metrics: null
+      });
+      toast({
+        title: "Asset Submitted Successfully!",
+        description: "Your asset tokenization request has been submitted for review. You'll receive updates via notification.",
+      });
+      setTimeout(() => {
+        navigate('/portfolio');
+      }, 2000);
+    } catch (e) {
+      setSubmitError('Failed to submit asset. Please check your KYC status and try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleFileUpload = (type) => {
-    // Simulate file upload
-    const fileName = type === 'document' ? 'valuation_report.pdf' : 'asset_photo.jpg';
-    const newFile = {
-      id: Date.now(),
-      name: fileName,
-      type: type,
-      size: '2.4 MB',
-      status: 'uploaded'
-    };
-
+  const handleFileChange = (e, type) => {
+    const files = Array.from(e.target.files);
     if (type === 'document') {
       setFormData(prev => ({
         ...prev,
-        documents: [...prev.documents, newFile]
+        documents: [...prev.documents, ...files]
       }));
     } else {
       setFormData(prev => ({
         ...prev,
-        images: [...prev.images, newFile]
+        images: [...prev.images, ...files]
       }));
     }
-
-    toast({
-      title: "File Uploaded",
-      description: `${fileName} has been uploaded successfully.`,
-    });
   };
 
   const renderStepContent = () => {
@@ -273,12 +287,20 @@ const TokenizeAsset = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   Upload legal documents, valuations, and certificates
                 </p>
+                <input
+                  type="file"
+                  id="document-upload"
+                  style={{ display: 'none' }}
+                  onChange={e => handleFileChange(e, 'document')}
+                  multiple
+                />
                 <button
-                  onClick={() => handleFileUpload('document')}
+                  type="button"
+                  onClick={() => document.getElementById('document-upload').click()}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md flex items-center justify-center"
                 >
                   <Upload className="mr-2 h-4 w-4 text-white" />
-                  Upload Documents
+                  Upload Document
                 </button>
                 
                 <div className="mt-4 space-y-2">
@@ -302,12 +324,21 @@ const TokenizeAsset = () => {
                 <p className="text-sm text-gray-600 mb-2">
                   Upload high-quality images of your asset
                 </p>
+                <input
+                  type="file"
+                  id="image-upload"
+                  style={{ display: 'none' }}
+                  accept="image/*"
+                  onChange={e => handleFileChange(e, 'image')}
+                  multiple
+                />
                 <button
-                  onClick={() => handleFileUpload('image')}
+                  type="button"
+                  onClick={() => document.getElementById('image-upload').click()}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md flex items-center justify-center"
                 >
                   <Upload className="mr-2 h-4 w-4 text-white" />
-                  Upload Images
+                  Upload Image
                 </button>
                 
                 <div className="mt-4 space-y-2">
@@ -454,12 +485,15 @@ const TokenizeAsset = () => {
             </button>
           ) : (
             <button
+              type="button"
               onClick={handleSubmit}
+              disabled={submitting}
               className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md"
             >
-              Submit for Review
+              {submitting ? "Submitting..." : "Submit"}
             </button>
           )}
+          {submitError && <div className="text-red-500 mt-2">{submitError}</div>}
         </div>
       </div>
     </div>
