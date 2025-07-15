@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useWalletConnect } from '../hooks/useWallet';
-import { registerUser, getUser, updateProfile } from '../api/canister';
+import { registerUser, getUser, updateProfile, setKycStatus } from '../api/canister';
 
 export default function Profile() {
   const { principal, isConnected } = useWalletConnect();
@@ -10,6 +10,8 @@ export default function Profile() {
   const [bio, setBio] = useState('');
   const [avatar, setAvatar] = useState('');
   const [saving, setSaving] = useState(false);
+  const [kycStatus, setKycStatus] = useState('');
+  const [kycSubmitting, setKycSubmitting] = useState(false);
 
   useEffect(() => {
     if (!principal) return;
@@ -23,13 +25,18 @@ export default function Profile() {
           setUser(reg);
           setBio(reg?.profile?.bio || '');
           setAvatar(reg?.profile?.avatar || '');
+          setKycStatus(reg?.kyc_status || 'Not Submitted');
         } else {
           setUser(u);
           setBio(u?.profile?.bio || '');
           setAvatar(u?.profile?.avatar || '');
+          setKycStatus(u?.kyc_status || 'Not Submitted');
         }
       })
-      .catch((e) => setError('Failed to load user'))
+      .catch((e) => {
+        console.error('getUser error:', e);
+        setError('Failed to load user');
+      })
       .finally(() => setLoading(false));
   }, [principal]);
 
@@ -44,6 +51,19 @@ export default function Profile() {
       setError('Failed to update profile');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleKycSubmit = async () => {
+    setKycSubmitting(true);
+    setError('');
+    try {
+      await setKycStatus(user.id, 'Pending');
+      setKycStatus('Pending');
+    } catch (e) {
+      setError('Failed to submit KYC request');
+    } finally {
+      setKycSubmitting(false);
     }
   };
 
@@ -94,6 +114,23 @@ export default function Profile() {
           {saving ? 'Saving...' : 'Save'}
         </button>
       </form>
+      {/* KYC Section */}
+      <div className="mt-8 p-4 border rounded">
+        <div className="font-semibold mb-2">KYC Status: <span className="text-blue-600">{kycStatus}</span></div>
+        {kycStatus === 'Not Submitted' || kycStatus === 'Rejected' ? (
+          <button
+            onClick={handleKycSubmit}
+            className="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition"
+            disabled={kycSubmitting}
+          >
+            {kycSubmitting ? 'Submitting...' : 'Submit KYC Request'}
+          </button>
+        ) : kycStatus === 'Pending' ? (
+          <div className="text-yellow-600">Your KYC is under review.</div>
+        ) : kycStatus === 'Approved' ? (
+          <div className="text-green-600">Your KYC is approved!</div>
+        ) : null}
+      </div>
     </div>
   );
 } 

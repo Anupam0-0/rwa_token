@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Connect2ICProvider client={client}>
-        <App />
+    <App />
       </Connect2ICProvider>
     </BrowserRouter>
   </React.StrictMode>,

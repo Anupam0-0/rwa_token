@@ -86,13 +86,13 @@ const TokenizeAsset = () => {
         risk_rating: null,
         key_metrics: null
       });
-      toast({
-        title: "Asset Submitted Successfully!",
+    toast({
+      title: "Asset Submitted Successfully!",
         description: "Your asset tokenization request has been submitted for review. You'll receive updates via notification.",
-      });
-      setTimeout(() => {
-        navigate('/portfolio');
-      }, 2000);
+    });
+    setTimeout(() => {
+      navigate('/portfolio');
+    }, 2000);
     } catch (e) {
       setSubmitError('Failed to submit asset. Please check your KYC status and try again.');
     } finally {
@@ -141,11 +141,11 @@ const TokenizeAsset = () => {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 >
                   <option value="">Select asset type</option>
-                  {assetTypes.map((type) => (
+                    {assetTypes.map((type) => (
                     <option key={type} value={type}>
-                      {type}
+                        {type}
                     </option>
-                  ))}
+                    ))}
                 </select>
               </div>
             </div>
@@ -259,17 +259,17 @@ const TokenizeAsset = () => {
               <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
                 <h4 className="font-semibold mb-2 text-sm">Tokenization Summary</h4>
                 <div className="grid grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <span className="text-gray-600">Total Tokens:</span>
-                    <span className="ml-2 font-semibold">
-                      {Math.floor(formData.totalValue / formData.tokenPrice).toLocaleString()}
-                    </span>
+                    <div>
+                      <span className="text-gray-600">Total Tokens:</span>
+                      <span className="ml-2 font-semibold">
+                        {Math.floor(formData.totalValue / formData.tokenPrice).toLocaleString()}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Token Value:</span>
+                      <span className="ml-2 font-semibold">${formData.tokenPrice}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-gray-600">Token Value:</span>
-                    <span className="ml-2 font-semibold">${formData.tokenPrice}</span>
-                  </div>
-                </div>
               </div>
             )}
           </div>
@@ -282,10 +282,10 @@ const TokenizeAsset = () => {
               <div className="bg-white border border-gray-200 rounded-md p-4">
                 <h3 className="font-semibold text-lg flex items-center mb-2">
                   <FileText className="mr-2 h-5 w-5 text-blue-600" />
-                  Documentation
+                    Documentation
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
-                  Upload legal documents, valuations, and certificates
+                    Upload legal documents, valuations, and certificates
                 </p>
                 <input
                   type="file"
@@ -298,31 +298,31 @@ const TokenizeAsset = () => {
                   type="button"
                   onClick={() => document.getElementById('document-upload').click()}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md flex items-center justify-center"
-                >
+                  >
                   <Upload className="mr-2 h-4 w-4 text-white" />
                   Upload Document
                 </button>
-                
+                  
                 <div className="mt-4 space-y-2">
-                  {formData.documents.map((doc) => (
+                    {formData.documents.map((doc) => (
                     <div key={doc.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-md text-sm">
-                      <div className="flex items-center">
-                        <FileText className="mr-2 h-4 w-4 text-blue-600" />
+                        <div className="flex items-center">
+                          <FileText className="mr-2 h-4 w-4 text-blue-600" />
                         <span>{doc.name}</span>
-                      </div>
+                        </div>
                       <span className="text-gray-600">{doc.size}</span>
-                    </div>
-                  ))}
-                </div>
+                      </div>
+                    ))}
+                  </div>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-md p-4">
                 <h3 className="font-semibold text-lg flex items-center mb-2">
                   <Upload className="mr-2 h-5 w-5 text-green-600" />
-                  Images
+                    Images
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
-                  Upload high-quality images of your asset
+                    Upload high-quality images of your asset
                 </p>
                 <input
                   type="file"
@@ -336,39 +336,39 @@ const TokenizeAsset = () => {
                   type="button"
                   onClick={() => document.getElementById('image-upload').click()}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md flex items-center justify-center"
-                >
+                  >
                   <Upload className="mr-2 h-4 w-4 text-white" />
                   Upload Image
                 </button>
-                
+                  
                 <div className="mt-4 space-y-2">
-                  {formData.images.map((img) => (
+                    {formData.images.map((img) => (
                     <div key={img.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-md text-sm">
-                      <div className="flex items-center">
-                        <Upload className="mr-2 h-4 w-4 text-green-600" />
+                        <div className="flex items-center">
+                          <Upload className="mr-2 h-4 w-4 text-green-600" />
                         <span>{img.name}</span>
-                      </div>
+                        </div>
                       <span className="text-gray-600">{img.size}</span>
-                    </div>
-                  ))}
-                </div>
+                      </div>
+                    ))}
+                  </div>
               </div>
             </div>
 
             <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-              <div className="flex items-start">
-                <AlertCircle className="mr-2 h-5 w-5 text-yellow-600 mt-0.5" />
-                <div>
+                <div className="flex items-start">
+                  <AlertCircle className="mr-2 h-5 w-5 text-yellow-600 mt-0.5" />
+                  <div>
                   <h4 className="font-semibold text-yellow-800 text-sm">Required Documents</h4>
                   <ul className="text-xs text-yellow-700 mt-2 space-y-1">
-                    <li>• Property valuation or appraisal report</li>
-                    <li>• Legal ownership documents</li>
-                    <li>• Insurance certificates</li>
-                    <li>• Financial statements (if applicable)</li>
-                    <li>• Compliance and regulatory documents</li>
-                  </ul>
+                      <li>• Property valuation or appraisal report</li>
+                      <li>• Legal ownership documents</li>
+                      <li>• Insurance certificates</li>
+                      <li>• Financial statements (if applicable)</li>
+                      <li>• Compliance and regulatory documents</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         );
@@ -379,35 +379,35 @@ const TokenizeAsset = () => {
             <div className="bg-white border border-gray-200 rounded-md p-4">
               <h3 className="font-semibold text-lg mb-2">Review Your Asset Tokenization</h3>
               <p className="text-sm text-gray-600 mb-2">
-                Please review all information before submitting
+                  Please review all information before submitting
               </p>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
                   <h4 className="font-semibold mb-2 text-sm">Asset Information</h4>
                   <div className="space-y-2 text-xs">
-                    <div><span className="text-gray-600">Name:</span> {formData.assetName}</div>
-                    <div><span className="text-gray-600">Type:</span> {formData.assetType}</div>
-                    <div><span className="text-gray-600">Location:</span> {formData.location}</div>
+                      <div><span className="text-gray-600">Name:</span> {formData.assetName}</div>
+                      <div><span className="text-gray-600">Type:</span> {formData.assetType}</div>
+                      <div><span className="text-gray-600">Location:</span> {formData.location}</div>
+                    </div>
                   </div>
-                </div>
-                
-                <div>
+                  
+                  <div>
                   <h4 className="font-semibold mb-2 text-sm">Tokenization Details</h4>
                   <div className="space-y-2 text-xs">
-                    <div><span className="text-gray-600">Total Value:</span> ${parseInt(formData.totalValue || 0).toLocaleString()}</div>
-                    <div><span className="text-gray-600">Token Price:</span> ${formData.tokenPrice}</div>
-                    <div><span className="text-gray-600">Expected APY:</span> {formData.expectedApy}%</div>
+                      <div><span className="text-gray-600">Total Value:</span> ${parseInt(formData.totalValue || 0).toLocaleString()}</div>
+                      <div><span className="text-gray-600">Token Price:</span> ${formData.tokenPrice}</div>
+                      <div><span className="text-gray-600">Expected APY:</span> {formData.expectedApy}%</div>
+                    </div>
                   </div>
                 </div>
-              </div>
 
               <div className="mt-4">
                 <h4 className="font-semibold mb-2 text-sm">Uploaded Files</h4>
                 <div className="text-xs text-gray-600">
-                  <div>Documents: {formData.documents.length} files</div>
-                  <div>Images: {formData.images.length} files</div>
+                    <div>Documents: {formData.documents.length} files</div>
+                    <div>Images: {formData.images.length} files</div>
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
         );
@@ -461,9 +461,9 @@ const TokenizeAsset = () => {
         <div className="bg-white border border-gray-200 rounded-md p-6">
           <h3 className="font-semibold text-lg mb-2">Step {currentStep}: {steps[currentStep - 1].title}</h3>
           <p className="text-sm text-gray-600 mb-4">
-            Step {currentStep} of {steps.length}
+              Step {currentStep} of {steps.length}
           </p>
-          {renderStepContent()}
+            {renderStepContent()}
         </div>
 
         {/* Navigation Buttons */}

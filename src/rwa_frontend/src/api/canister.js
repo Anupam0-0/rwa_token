@@ -1,22 +1,14 @@
 import { HttpAgent, Actor } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
+import { idlFactory } from 'declarations/rwa_backend/rwa_backend.did.js';
 
-const CANISTER_ID = import.meta.env.VITE_BACKEND_CANISTER_ID || '<rwa_backend_canister_id>';
+const CANISTER_ID = import.meta.env.CANISTER_ID_RWA_BACKEND || '<rwa_backend_canister_id>';
 
 const agent = new HttpAgent({
   host: 'http://localhost:4943', // Change to mainnet if needed
 });
 
-async function loadIDLFactory() {
-  const res = await fetch('/declarations/rwa_backend/rwa_backend.did.js');
-  const js = await res.text();
-  // eslint-disable-next-line no-eval
-  const module = {};
-  eval(js + '\nmodule.exports = {idlFactory};');
-  return module.exports.idlFactory;
-}
-
 export async function getBackendActor() {
-  const idlFactory = await loadIDLFactory();
   return Actor.createActor(idlFactory, {
     agent,
     canisterId: CANISTER_ID,
@@ -24,13 +16,16 @@ export async function getBackendActor() {
 }
 
 export async function registerUser(username, email, wallet_address) {
+  // If username/email/wallet_address are principal strings, convert them
+  const userPrincipal = Principal.fromText(username);
   const backend = await getBackendActor();
-  return backend.register_user(username, email, wallet_address);
+  return backend.register_user(userPrincipal, email, wallet_address);
 }
 
 export async function getUser(principal) {
   const backend = await getBackendActor();
-  return backend.get_user(principal);
+  const principalObj = Principal.fromText(principal);
+  return backend.get_user(principalObj);
 }
 
 export async function updateProfile(bio, avatar) {
@@ -92,12 +87,14 @@ export async function mintToken(asset_id, owner_id, amount, price) {
 
 export async function getPortfolio(principal) {
   const backend = await getBackendActor();
-  return backend.get_portfolio(principal);
+  const principalObj = Principal.fromText(principal);
+  return backend.get_portfolio(principalObj);
 }
 
 export async function listTokensByUser(principal) {
   const backend = await getBackendActor();
-  return backend.list_tokens_by_user(principal);
+  const principalObj = Principal.fromText(principal);
+  return backend.list_tokens_by_user(principalObj);
 }
 
 export async function listTrades() {
@@ -117,7 +114,8 @@ export async function updateTradeStatus(id, status, filled) {
 
 export async function listNotificationsByUser(principal) {
   const backend = await getBackendActor();
-  return backend.list_notifications_by_user(principal);
+  const principalObj = Principal.fromText(principal);
+  return backend.list_notifications_by_user(principalObj);
 }
 
 export async function markNotificationRead(id) {

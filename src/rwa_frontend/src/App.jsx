@@ -27,17 +27,11 @@ const Home = () => (
   </>
 );
 
-function TestConnect() {
-  const { connect } = useConnect();
-  return <button onClick={() => connect(undefined)}>Test Connect</button>;
-}
-
 function App() {
   const { isConnected } = useWalletConnect();
   return (
     <div>
         <Navbar/>
-        <TestConnect />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/marketplace" element={<Marketplace />} />

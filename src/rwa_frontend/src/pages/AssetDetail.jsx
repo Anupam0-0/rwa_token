@@ -48,7 +48,7 @@ const AssetDetail = () => {
       const tokens = Math.floor(parseFloat(investmentAmount) / asset.token_price);
       await mintToken(asset.id, principal, tokens, asset.token_price);
       toast({ title: 'Investment Successful!', description: `You've invested $${investmentAmount} and received ${tokens} tokens in ${asset.name}` });
-      setInvestmentAmount('');
+    setInvestmentAmount('');
     } catch (e) {
       toast({ title: 'Investment Failed', description: 'Could not complete investment. Please try again.', variant: 'destructive' });
     } finally {
@@ -93,38 +93,38 @@ const AssetDetail = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Asset Header */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">{asset.name}</h1>
-                  <div className="flex items-center space-x-4 text-gray-600">
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {asset.location}
-                    </div>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h1 className="text-3xl font-bold mb-2">{asset.name}</h1>
+                    <div className="flex items-center space-x-4 text-gray-600">
+                      <div className="flex items-center">
+                        <MapPin className="h-4 w-4 mr-1" />
+                        {asset.location}
+                      </div>
                     <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                       {asset.category}
                     </span>
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                      {asset.status}
+                        {asset.status}
                     </span>
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">Current Token Price</p>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-600">Current Token Price</p>
                   <p className="text-2xl font-bold">${asset.token_price}</p>
-                </div>
-              </div>
-
-              {/* Image Gallery */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                {asset.images.map((image, index) => (
-                  <div key={index} className="aspect-video bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-semibold">Asset Image {index + 1}</span>
                   </div>
-                ))}
-              </div>
+                </div>
 
-              <p className="text-gray-700 leading-relaxed">{asset.description}</p>
+                {/* Image Gallery */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  {asset.images.map((image, index) => (
+                    <div key={index} className="aspect-video bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-semibold">Asset Image {index + 1}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-gray-700 leading-relaxed">{asset.description}</p>
             </div>
 
             {/* Detailed Tabs */}
@@ -144,53 +144,53 @@ const AssetDetail = () => {
                 </button>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-xl font-bold mb-4">Key Metrics</h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Cap Rate</span>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Cap Rate</span>
                       <span className="font-semibold">{asset.key_metrics.cap_rate}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Occupancy Rate</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Occupancy Rate</span>
                       <span className="font-semibold">{asset.key_metrics.occupancy_rate}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Location Score</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Location Score</span>
                       <span className="font-semibold">{asset.key_metrics.location_score}/10</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Liquidity</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Liquidity</span>
                       <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                         {asset.key_metrics.liquidity_rating}
                       </span>
                     </div>
                   </div>
-                </div>
+                      </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-xl font-bold mb-4">Investment Details</h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Total Value</span>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Total Value</span>
                       <span className="font-semibold">{formatCurrency(asset.total_value)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Expected APY</span>
-                      <span className="font-semibold text-green-600">{asset.apy}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Risk Rating</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Expected APY</span>
+                        <span className="font-semibold text-green-600">{asset.apy}%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Risk Rating</span>
                       <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
                         {asset.risk_rating}
                       </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Min. Investment</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Min. Investment</span>
                       <span className="font-semibold">{formatCurrency(asset.minimum_investment)}</span>
                     </div>
-                  </div>
+                      </div>
                 </div>
               </div>
             </div>
@@ -198,97 +198,97 @@ const AssetDetail = () => {
             <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-bold mb-4">Financial Breakdown (Monthly)</h3>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="font-semibold mb-4 text-green-600">Income</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Rental Income</span>
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <h4 className="font-semibold mb-4 text-green-600">Income</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Rental Income</span>
                         <span className="font-semibold">{formatCurrency(asset.financials.monthly_rent)}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-4 text-red-600">Expenses</h4>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Property Taxes</span>
+                      <div>
+                        <h4 className="font-semibold mb-4 text-red-600">Expenses</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Property Taxes</span>
                         <span className="font-semibold">{formatCurrency(asset.financials.property_taxes)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Insurance</span>
-                        <span className="font-semibold">{formatCurrency(asset.financials.insurance)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Maintenance</span>
-                        <span className="font-semibold">{formatCurrency(asset.financials.maintenance)}</span>
-                      </div>
-                      <div className="border-t pt-3">
-                        <div className="flex justify-between font-semibold">
-                          <span>Total Expenses</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Insurance</span>
+                            <span className="font-semibold">{formatCurrency(asset.financials.insurance)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-600">Maintenance</span>
+                            <span className="font-semibold">{formatCurrency(asset.financials.maintenance)}</span>
+                          </div>
+                          <div className="border-t pt-3">
+                            <div className="flex justify-between font-semibold">
+                              <span>Total Expenses</span>
                           <span>{formatCurrency(asset.financials.operating_expenses)}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="mt-6 pt-6 border-t">
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Net Operating Income</span>
+                    <div className="mt-6 pt-6 border-t">
+                      <div className="flex justify-between text-lg font-bold">
+                        <span>Net Operating Income</span>
                     <span className="text-green-600">{formatCurrency(asset.financials.net_operating_income)}</span>
                   </div>
                 </div>
-              </div>
-            </div>
+                      </div>
+                    </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-bold mb-4">Legal Documents</h3>
-                <div className="space-y-4">
-                  {asset.documents.map((doc, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                      <div className="flex items-center space-x-3">
-                        <FileText className="h-8 w-8 text-blue-600" />
-                        <div>
-                          <p className="font-semibold">{doc.name}</p>
-                          <p className="text-sm text-gray-600">{doc.type} • {doc.size}</p>
-                        </div>
-                      </div>
+                    <div className="space-y-4">
+                      {asset.documents.map((doc, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                          <div className="flex items-center space-x-3">
+                            <FileText className="h-8 w-8 text-blue-600" />
+                            <div>
+                              <p className="font-semibold">{doc.name}</p>
+                              <p className="text-sm text-gray-600">{doc.type} • {doc.size}</p>
+                            </div>
+                          </div>
                       <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors">
-                        Download
+                            Download
                       </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
               </div>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h3 className="text-xl font-bold mb-4">Recent Activity</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-green-600" />
-                    <div>
-                      <p className="font-semibold">Large Investment</p>
-                      <p className="text-sm text-gray-600">$25,000 investment • 2 hours ago</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                        <TrendingUp className="h-5 w-5 text-green-600" />
+                        <div>
+                          <p className="font-semibold">Large Investment</p>
+                          <p className="text-sm text-gray-600">$25,000 investment • 2 hours ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                        <DollarSign className="h-5 w-5 text-blue-600" />
+                        <div>
+                          <p className="font-semibold">Dividend Payment</p>
+                          <p className="text-sm text-gray-600">Monthly dividends distributed • 1 day ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                        <Users className="h-5 w-5 text-purple-600" />
+                        <div>
+                          <p className="font-semibold">New Investor Milestone</p>
+                          <p className="text-sm text-gray-600">1,250 investors reached • 3 days ago</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                    <DollarSign className="h-5 w-5 text-blue-600" />
-                    <div>
-                      <p className="font-semibold">Dividend Payment</p>
-                      <p className="text-sm text-gray-600">Monthly dividends distributed • 1 day ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-                    <Users className="h-5 w-5 text-purple-600" />
-                    <div>
-                      <p className="font-semibold">New Investor Milestone</p>
-                      <p className="text-sm text-gray-600">1,250 investors reached • 3 days ago</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

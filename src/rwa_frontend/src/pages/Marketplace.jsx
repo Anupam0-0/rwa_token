@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Search, Filter, TrendingUp, Building, Palette, Coins, Plus } from 'lucide-react';
 import { listAssets } from '../api/canister';
 import { useWalletConnect } from '../hooks/useWallet';
+import FeaturesAssetsSection from '../components/FeaturesAssetsSection';
+import { CardDetails } from '../components/FeaturesAssetsSection';
 
 const Marketplace = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +19,27 @@ const Marketplace = () => {
     setLoading(true);
     setError('');
     listAssets()
-      .then(setAssets)
+      .then((realAssets) => {
+        // Map dummy assets to match the marketplace asset structure
+        const dummyAssets = CardDetails.map(card => ({
+          ...card,
+          id: card.id,
+          name: card.title, // map title to name
+          category: card.Category, // map Category to category
+          total_value: card.total_value,
+          token_price: card.token_price,
+          available_tokens: card.available_tokens,
+          total_tokens: card.total_tokens,
+          apy: card.apy,
+          location: card.location,
+        }));
+        // Avoid duplicates by id
+        const allAssets = [
+          ...realAssets,
+          ...dummyAssets.filter(d => !realAssets.some(r => r.id === d.id))
+        ];
+        setAssets(allAssets);
+      })
       .catch(() => setError('Failed to load assets'))
       .finally(() => setLoading(false));
   }, []);
@@ -67,11 +89,11 @@ const Marketplace = () => {
               <Plus className="w-4 h-4" /> List Asset
             </Link>
           )}
-        </div>
+          </div>
 
-        {/* Category Tabs */}
+          {/* Category Tabs */}
         <div className="flex flex-wrap gap-2 mb-6">
-          {categories.map((category) => (
+              {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -84,7 +106,7 @@ const Marketplace = () => {
               <category.icon className="h-4 w-4 mr-2" />
               {category.name}
             </button>
-          ))}
+              ))}
         </div>
 
         {/* Results Summary */}
@@ -98,18 +120,18 @@ const Marketplace = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAssets.map((asset) => (
             <div key={asset.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-200">
-              <div className="w-full h-48 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-white font-semibold text-lg">
-                  {asset.category.charAt(0).toUpperCase() + asset.category.slice(1).replace('-', ' ')}
-                </span>
-              </div>
+                <div className="w-full h-48 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                  <span className="text-white font-semibold text-lg">
+                    {asset.category.charAt(0).toUpperCase() + asset.category.slice(1).replace('-', ' ')}
+                  </span>
+                </div>
               <div className="p-4">
                 <h3 className="text-lg font-bold line-clamp-2">{asset.name}</h3>
                 <p className="text-gray-600 text-sm">{asset.location}</p>
                 <div className="flex items-center mt-4 text-sm text-gray-600">
                   <span>Total Value:</span>
                   <span className="font-semibold ml-1">{formatCurrency(asset.total_value)}</span>
-                </div>
+                  </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <span>Token Price:</span>
                   <span className="font-semibold ml-1">${asset.token_price}</span>
@@ -117,7 +139,7 @@ const Marketplace = () => {
                 <div className="flex items-center text-sm text-gray-600">
                   <span>Available:</span>
                   <span className="font-semibold ml-1">{asset.available_tokens?.toLocaleString()}</span>
-                </div>
+                  </div>
                 <div className="flex items-center text-sm text-green-600">
                   <span>Expected APY:</span>
                   <span className="font-semibold ml-1">{asset.apy}%</span>
